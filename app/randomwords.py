@@ -17,7 +17,10 @@ class WordRandomizer:
     words each time that I want a random ID (which isn't very costly)
     """
     def __init__(self):
-        self.words = list(english_words_set)
+        self.words = self._create_wordlist()
+
+    def _create_wordlist(self):
+        return list(english_words_set)
 
     def __iter__(self, max_words=5):
         return (random_choice(self.words) for _ in range(max_words))

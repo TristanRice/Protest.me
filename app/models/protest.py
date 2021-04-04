@@ -6,12 +6,13 @@ def create_random_pretty_id(n=5):
 
 class Protest(db.Model):
     
-    __tablename__ = "protests"
+    __tablename__ = "protest"
 
     id = db.Column(db.String(64), primary_key=True, default=create_random_pretty_id, unique=True)
     title = db.Column(db.String(128), index=True)
-    date_created = db.Column("date_created", db.DateTime, default=datetime.datetime.utcnow)
-    date_happening = db.Column("date_happening", db.DateTime)
+    date_created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    date_happening = db.Column(db.DateTime)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     def __init__(self, title, date_happening, id_max_words=5):
         self.id = create_random_pretty_id(n=id_max_words)
