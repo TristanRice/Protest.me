@@ -17,7 +17,12 @@ login = LoginManager(app)
 # Register blueprints
 
 from app.auth import auth_blueprint
+from app.protests import protest_blueprint
+from app.user import user_blueprint
+
 app.register_blueprint(auth_blueprint)
+app.register_blueprint(protest_blueprint, url_prefix="/protest")
+app.register_blueprint(user_blueprint, url_prefix="/user")
 
 print(app.url_map)
 

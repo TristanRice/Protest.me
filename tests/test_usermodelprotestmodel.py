@@ -10,6 +10,7 @@ USER_CREDENTIALS = {
 
 PROTEST_CONFIG = {
     "title": "title",
+    "text": "aa",
     "date_happening": datetime.datetime.utcnow()
 }
 

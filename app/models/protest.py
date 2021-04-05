@@ -10,15 +10,17 @@ class Protest(db.Model):
 
     id = db.Column(db.String(64), primary_key=True, default=create_random_pretty_id, unique=True)
     title = db.Column(db.String(128), index=True)
+    text = db.Column(db.Text(1028))
     date_created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     date_happening = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
-    def __init__(self, title, date_happening, id_max_words=5):
+    def __init__(self, text, title, date_happening, id_max_words=5):
         self.id = create_random_pretty_id(n=id_max_words)
         self.date_created = datetime.datetime.utcnow()
         self.date_happening = date_happening
         self.title = title
+        self.text = text
 
     def __repr__(self):
         return f"<Protest \"{self.title}\">"

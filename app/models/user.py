@@ -4,22 +4,28 @@ import bcrypt
 import hashlib
 import base64
 import datetime
+from wtforms.validators import ValidationError
 
 
 class User(UserMixin, db.Model):
     
     __tablename__ = "user"
 
-    id        = db.Column(db.Integer, primary_key=True, index=True)
-    email     = db.Column(db.String(128))
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    email = db.Column(db.String(128))
+    username = db.Column(db.String(32))
     _password = db.Column("password", db.String(128))
     date_created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     protests = db.relationship("Protest", backref="users")
+    
+    profile_id = db.Column(db.Integer, db.ForeignKey("profile.id"))
+    profile = db.relationship("Profile", uselist=False)
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, username=""):
         self.email = email
         self.password = password
+        self.username = username
 
     def _password_to_sha256_base64(self, plaintext_password):
         # Bcrypt max password length is 72, so I convert it to base64 sha256
@@ -51,6 +57,21 @@ class User(UserMixin, db.Model):
     def email_is_taken(email_attempt):
         u = User.query.filter_by(email=email_attempt).first()
         return u is not None
+
+    def email_is_unique(form, field, message=""):
+        email_attempt = field.data
+        default_message = "That email is already taken"
+        u = User.query.filter_by(email=email_attempt).first()
+        if u is not None:
+            raise ValidationError(message or default_message)
+
+    @staticmethod
+    def username_is_unique(form, field, message=""):
+        username_attempt = field.data
+        default_message = "Username is not unique"
+        u = User.query.filter_by(username=username_attempt).first()
+        if u is not None:
+            raise ValidationError(message or default_message)
 
     def __repr__(self):
         return f"<User {self.email}>"
