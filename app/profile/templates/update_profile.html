@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profile</title>
+</head>
+<body>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.facebook_link.label }}<br>
+            {{ form.facebook_link(size=32) }}
+            {% for error in form.facebook_link.errors %}
+            <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.twitter_link.label }}<br>
+            {{ form.twitter_link(size=32) }}
+            {% for error in form.twitter_link.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.youtube_link.label }}<br>
+            {{ form.youtube_link(size=32) }}
+            {% for error in form.youtube_link.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.instagram_link.label }}<br>
+            {{ form.instagram_link(size=32) }}
+            {% for error in form.instagram_link.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.submit }}
+        </p>
+</body>
+</html>

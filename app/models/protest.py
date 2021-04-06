@@ -1,5 +1,7 @@
 from app import db, random_words
+import app
 import datetime
+import segno
 
 def create_random_pretty_id(n=5):
     return "".join(word.capitalize() for word in random_words(max_words=n))
@@ -13,7 +15,9 @@ class Protest(db.Model):
     text = db.Column(db.Text(1028))
     date_created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     date_happening = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    qr_uri = db.Column(db.String(12000))
+
+    user_id = db.Column("user_id", db.Integer, db.ForeignKey("user.id"))
 
     def __init__(self, text, title, date_happening, id_max_words=5):
         self.id = create_random_pretty_id(n=id_max_words)
@@ -40,3 +44,8 @@ class Protest(db.Model):
         difference = self._get_date_difference_between_now_and_protest_date()
         print(difference)
         return difference.days
+
+    @property
+    def qr_code_data_uri(self):
+        url = f"http://{app.config.get('SERVER_NAME')}/protest/{self.id}"
+        return segno.make(url).svg_data_uri()

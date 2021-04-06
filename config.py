@@ -1,4 +1,10 @@
 import os
+import json
+
+
+with open("recaptcha-keys.json") as f:
+    data = json.load(f)
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
@@ -8,3 +14,7 @@ class Config:
 
     SECRET_KEY = os.environ.get("SECRET_KEY") or "random-secret-key"
     
+    RECAPTCHA_USE_SSL = False
+    RECAPTCHA_PUBLIC_KEY = data["public_key"]
+    RECAPTCHA_PRIVATE_KEY = data["private_key"]
+    RECAPTCHA_OPTIONS = {"theme": "white"}

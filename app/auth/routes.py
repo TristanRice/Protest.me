@@ -4,6 +4,7 @@ from flask import flash, render_template, redirect, url_for
 from flask_login import current_user, login_user
 from app import db
 from flask import Blueprint
+from app.helpers import commit_items_to_session
 
 bp = Blueprint("auth", __name__, template_folder="templates")
 
@@ -20,9 +21,8 @@ def login():
     form = LoginForm(meta={"csrf": False})
     if not form.validate_on_submit():
         return render_template("login.html", form=form)
-    username_or_email, password = form.username_or_email.data, form.password.data
+    username_or_email, password = form.get_attributes("username_or_email", "password") 
     user = find_user_by_username_or_email(username_or_email)
-    print(user)
     if not user or not user.verify_password(password):
         flash("Username or password incorrect")
         return render_template("login.html", form=form)
@@ -34,11 +34,8 @@ def register():
     form = RegisterForm(meta={"csrf": False})
     if not form.validate_on_submit():
         return render_template("register.html", form=form)
-    email, username, password = form.email.data, form.username.data, form.password.data
-    if User.email_is_taken(email):
-        flash("Email is already taken")
-        return redirect(url_for("auth.register"))
-    u = User(email=email, username=username, password=password)
-    db.session.add(u)
-    db.session.commit()
+    email, username, password = form.get_attributes("email", "username", "password")
+    user = User(email=email, username=username, password=password)
+    commit_items_to_session(user)
+    login_user(user, remember=False)
     return redirect(url_for("index"))

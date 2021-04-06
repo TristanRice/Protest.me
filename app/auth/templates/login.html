@@ -32,8 +32,8 @@
             {% for error in form.password.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-
         </p>
+        {{ form.recaptcha }}
         <p>{{ form.submit() }}</p>
 </body>
 </html>

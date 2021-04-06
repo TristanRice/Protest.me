@@ -1,4 +1,4 @@
-from flask_wtf import FlaskForm
+from app.helpers import FlaskFormMixin
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Email, ValidationError, Required
@@ -14,7 +14,7 @@ def validate_date(form, field):
     if date_today > date_protest_is_happening:
         raise ValidationError("Protest must be organized for a date later than today")
     
-class CreateProtestForm(FlaskForm):
+class CreateProtestForm(FlaskFormMixin):
     title = StringField("Title", validators=[
         data_required_with_message
     ])

@@ -1,5 +1,6 @@
 from app import db, random_words, login
 from flask_login import UserMixin
+from app.models.profile import Profile
 import bcrypt
 import hashlib
 import base64
@@ -18,14 +19,13 @@ class User(UserMixin, db.Model):
     date_created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     protests = db.relationship("Protest", backref="users")
-    
-    profile_id = db.Column(db.Integer, db.ForeignKey("profile.id"))
-    profile = db.relationship("Profile", uselist=False)
+    profile = db.relationship("Profile", backref="users", uselist=False)
 
     def __init__(self, email, password, username=""):
         self.email = email
         self.password = password
         self.username = username
+        self.profile = Profile()
 
     def _password_to_sha256_base64(self, plaintext_password):
         # Bcrypt max password length is 72, so I convert it to base64 sha256

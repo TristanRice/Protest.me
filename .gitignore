@@ -2,3 +2,6 @@ env
 **/__pychache__/*
 *.pyc
 migrations
+_migrations
+_app.db
+recaptcha-keys.json
