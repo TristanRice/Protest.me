@@ -30,3 +30,4 @@ class RegisterForm(FlaskFormMixin):
         match_regex_string(**user_regex.username)
     ])
     submit = SubmitField("Sign in")
+    recaptcha = RecaptchaField()

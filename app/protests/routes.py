@@ -1,9 +1,13 @@
-from app.protests.forms import CreateProtestForm
-from app.models import Protest, User
-from flask import flash, render_template, redirect, url_for
+from app.protests.forms import CreateProtestForm, RegisterForProtestForm
+from app.models import Protest, User, Protestor
+from flask import flash, render_template, redirect, url_for, request
 from flask_login import current_user
 from app import db
-from app.helpers import user_must_be_authenticated, commit_items_to_session 
+from app.helpers import(
+    user_must_be_authenticated,
+    commit_items_to_session,
+    VerifyProtestExistence 
+)
 from sqlalchemy.sql.expression import func as sqlalchemy_func
 from flask import Blueprint
 
@@ -38,12 +42,25 @@ def random():
 # /protest/<id>
 
 @bp.route("/<id>", methods=["GET"])
-def by_id(id):
-    protest = Protest.query.get(id)
+@VerifyProtestExistence(message="aa")
+def by_id(protest):
     return render_template("protest.html", protest=protest)
 
 #/protest/<id>/register
 
 @bp.route("/<id>/register", methods=["GET", "POST"])
-def register_by_id(id):
-    return "aa"
+@VerifyProtestExistence(message="Unable to register for protest")
+def register_by_id(protest):
+    form = RegisterForProtestForm()
+    if not form.validate_on_submit():
+        return render_template("register_for_protest.html", form=form)
+    unique_protestor = request.cookies.get("unique_protestor", False)
+    if not Protestor.is_unique(unique_protestor, protest.id):
+        flash("You have already registered for that protest")
+        return redirect(url_for("index"))
+    protestor = Protestor(
+        cookie_unique=unique_protestor,
+        protest_id=protest.id
+    )
+    commit_items_to_session(protestor)
+    return redirect(url_for("protest.by_id", id=protest.id))

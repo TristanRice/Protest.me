@@ -10,5 +10,7 @@
     <p><h1>Title</h1>{{ protest.title }}</p>
     <p><h1>Id</h1>{{ protest.id }}</p>
     <p><h1>Text</h1>{{ protest.text }}</p>
+    <p><h1>Number of protestors</h1>{{ protest.number_of_protestors }}</p>
+    <a href="{{url_for('protest.register_by_id', id=protest.id)}}">Register for protest</a>
 </body>
 </html>

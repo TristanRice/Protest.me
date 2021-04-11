@@ -33,7 +33,12 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        {{ form.recaptcha }}
+        {% if form.recaptcha %}
+            {{ form.recaptcha }}
+            {% if form.recaptcha.errors %}
+                <span style="color: red;">Please submit the captcha</span>
+            {% endif %}
+        {% endif %}
         <p>{{ form.submit() }}</p>
 </body>
 </html>

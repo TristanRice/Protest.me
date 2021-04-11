@@ -1,4 +1,5 @@
 from app.helpers import FlaskFormMixin
+from flask_wtf import RecaptchaField, FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Email, ValidationError, Required
@@ -25,4 +26,8 @@ class CreateProtestForm(FlaskFormMixin):
         data_required_with_message,
         validate_date
     ])
+    submit = SubmitField("Submit")
+
+class RegisterForProtestForm(FlaskForm):
+    recaptcha = RecaptchaField()
     submit = SubmitField("Submit")
